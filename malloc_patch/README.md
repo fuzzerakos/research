@@ -13,21 +13,25 @@ There is a simple check that can be added in `_int_malloc` that will mitigate th
 
 Real chunk sizes never have their 4th bit set.
 But sizes that are fake always have it set.
+
 Thus by adding this line of code in malloc source code we can mitigate these attacks.
+
 I am using glibc-2.27 (Ubuntu 18.04) with tcache disabled. This check can be implemented in tcache too the same way!
+
 The check was:
 ```C
 if (__builtin_expect (victim_idx != idx, 0))
                 malloc_printerr ("malloc(): memory corruption (fast)");
 ```
 
-And after this simple patch a lot of bugs will become unexploitable.
-
+After:
 ```C
 if (__builtin_expect (victim_idx != idx, 0)||(chunksize (victim)&8)!=0)
                 malloc_printerr ("malloc(): memory corruption (fast)");
 
 ```
+This patch will check if the 4th bit of the size is set.
+
 Note that even though this attack is only used in 0x70 sized fastbins we need to check every fastbin because if we didn't the patch could be easily bypassed by attacking the `global_max_fast` and setting it to a larger value. This way we could use the 2 most significant bytes of a libc address as a fake chunk size.
 
 I compiled the edited libc.
