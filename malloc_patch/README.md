@@ -1,4 +1,4 @@
-# Mitigating modern day heap attacks with a simple check.
+# Mitigating modern day heap attacks with a simple check. [Not reviewed]
 
 
 `_int_malloc` already has a check for the size of a chunk that is about to be removed from fastbin (`malloc(): memory corruption (fast)`).
