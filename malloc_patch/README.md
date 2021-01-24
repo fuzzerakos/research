@@ -11,8 +11,8 @@ Thus being able to overwrite hook functions or file structures from just a simpl
 
 There is a simple check that can be added in `_int_malloc` that will mitigate these types of attacks.
 
-Real chunk sizes never have their 4th bit set.
-But sizes that are fake always have it set.
+Real (fastbin range) chunk sizes don't have their 4th bit set.
+But chunk sizes that are fake have it set.
 
 Thus by adding this line of code in malloc source code we can mitigate these attacks.
 
